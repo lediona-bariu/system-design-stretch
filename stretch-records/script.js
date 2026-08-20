@@ -63,7 +63,7 @@ async function loadArtists() {
   try {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    const artists = await getArtists();
+    const { artists, label } = await getArtistsAndLabel();
     for (const artist of artists) {
       checkArtist(artist);
     }
@@ -87,13 +87,37 @@ async function loadArtists() {
 
 loadArtists();
 
-async function getArtists() {
+async function getArtistsAndLabel() {
   try {
-    const response = await fetch("artists.json");
-    return await response.json();
+    const [artistsResponse, labelResponse] = await Promise.all([
+      fetch("http://localhost:3000/artists"),
+      fetch("http://localhost:3001/label"),
+    ]);
+
+    if (!artistsResponse.ok) {
+      throw new Error(
+        "Artists request failed with status " + artistsResponse.status,
+      );
+    }
+
+    if (!labelResponse.ok) {
+      throw new Error(
+        "Label request failed with status " + labelResponse.status,
+      );
+    }
+
+    const [artists, label] = await Promise.all([
+      artistsResponse.json(),
+      labelResponse.json(),
+    ]);
+
+    console.log("Artists:", artists);
+    console.log("Label:", label);
+
+    return { artists, label };
   } catch (error) {
     throw new Error(
-      "Stretch Records page: loading artist data failed. " + error.message,
+      "Stretch Records page: loading data failed. " + error.message,
     );
   }
 }
@@ -114,15 +138,40 @@ const form = document.querySelector(".signup");
 const nameInput = document.querySelector("#artist-name");
 const genreInput = document.querySelector("#artist-genre");
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
+
   const name = nameInput.value;
-  if (name) {
-    const genre = genreInput.value || "Unsigned";
-    renderCards([{ name: name, genre: genre, total: "0:00" }]);
-    nameInput.value = "";
-    genreInput.value = "";
+  if (!name) return;
+
+  const newArtist = {
+    name: name,
+    genre: genreInput.value || "Unsigned",
+    total: "0:00",
+    photo: "",
+  };
+
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newArtist),
+  };
+
+  const response = await fetch("http://localhost:3000/artists", options);
+
+  console.log(response.status);
+
+  if (!response.ok) {
+    throw new Error("POST failed with status " + response.status);
   }
+
+  const savedArtist = await response.json();
+  renderCards([savedArtist]);
+
+  nameInput.value = "";
+  genreInput.value = "";
 });
 
 // Ledi; Step 3: temporary blocking loop.
