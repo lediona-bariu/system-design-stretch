@@ -36,17 +36,67 @@ function renderCards(list) {
   }
 }
 
-const statusBox = document.querySelector(".status");
-statusBox.textContent = "Loading artists...";
+/// Ledi: Lesson 3 - Step 4
+// Same loader rewritten with async/await and try/catch/finally.
 
-setTimeout(() => {
-  fetch("artists.json")
-    .then((response) => response.json())
-    .then((artists) => {
+const statusBox = document.querySelector(".status");
+
+// Ledi: Lesson 3 - Step 5
+// Custom error for missing artist data.
+
+class MissingArtistDataError extends Error {
+  constructor(field) {
+    super("Required artist data is missing: " + field);
+    this.name = "MissingArtistDataError";
+  }
+}
+
+function checkArtist(artist) {
+  if (!artist.name) {
+    throw new MissingArtistDataError("name");
+  }
+}
+
+async function loadArtists() {
+  statusBox.textContent = "Loading artists...";
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const artists = await getArtists();
+    for (const artist of artists) {
+      checkArtist(artist);
+    }
+    renderCards(artists);
+  } catch (error) {
+    if (error instanceof MissingArtistDataError) {
+      statusBox.textContent =
+        "Artist data is incomplete. Missing required field: name.";
+    } else {
+      statusBox.textContent =
+        "We could not load the artists. Please try again.";
+    }
+
+    console.log(error.name + ": " + error.message);
+  } finally {
+    if (statusBox.textContent === "Loading artists...") {
       statusBox.textContent = "";
-      renderCards(artists);
-    });
-}, 2000);
+    }
+  }
+}
+
+loadArtists();
+
+async function getArtists() {
+  try {
+    const response = await fetch("artists.json");
+    return await response.json();
+  } catch (error) {
+    throw new Error(
+      "Stretch Records page: loading artist data failed. " + error.message,
+    );
+  }
+}
 
 // Shuffle: pick a random artist and feature them.
 const shuffleButton = document.querySelector(".shuffle");
