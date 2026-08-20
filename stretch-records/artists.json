@@ -1,0 +1,75 @@
+{
+  "artists": [
+    {
+      "name": "Pinkfong",
+      "genre": "Children's music",
+      "total": "11:31",
+      "photo": "images/pinkfong.jpeg",
+      "id": "ne_GYufxj74"
+    },
+    {
+      "name": "Adriano Celentano",
+      "genre": "Italian pop",
+      "total": "20:52",
+      "photo": "images/adriano-celentano.jpg",
+      "id": "Gj9z4KV6Al8"
+    },
+    {
+      "name": "Asake",
+      "genre": "Afrobeats",
+      "total": "14:08",
+      "photo": "images/asake.jpg",
+      "id": "f_sXax1KFzI"
+    },
+    {
+      "name": "Miyagi and Andy Panda",
+      "genre": "Hip-hop",
+      "total": "16:21",
+      "photo": "images/miyagi-and-andy-panda.jpg",
+      "id": "nYmMWGAuHLg"
+    },
+    {
+      "name": "Johnny Cash",
+      "genre": "Country",
+      "total": "15:40",
+      "photo": "images/johnny-cash.jpg",
+      "id": "LXv7X7UJv9U"
+    },
+    {
+      "name": "Elvis Presley",
+      "genre": "Rock and roll",
+      "total": "18:25",
+      "photo": "",
+      "id": "20od-APKcrk"
+    },
+    {
+      "name": "Dua Lipa",
+      "genre": "Pop",
+      "total": "0:00",
+      "photo": "",
+      "id": "QBtfHOf2oEY"
+    },
+    {
+      "name": "Test Artist",
+      "genre": "Pop",
+      "total": "0:00",
+      "photo": "",
+      "id": "elf5_sZ5iYs"
+    },
+    {
+      "name": "Adele",
+      "genre": "Pop",
+      "total": "0:00",
+      "photo": "",
+      "id": "21EJkB0KRIM"
+    },
+    {
+      "name": "Rihanna",
+      "genre": "Pop",
+      "total": "0:00",
+      "photo": "",
+      "id": "Pk14UbVRVVU"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
